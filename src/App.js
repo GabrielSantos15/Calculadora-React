@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
+
+const operadores = ["+", "-", "*", "/"];
 
 export default function App() {
   const [valorTela, setValorTela] = useState("");
@@ -7,10 +11,20 @@ export default function App() {
   const [acumulador, setAcumador] = useState(0);
   const [operado, setOperado] = useState(false);
 
+  const telaRef = useRef(null);
+
+  useEffect(() => {
+    if (telaRef.current) {
+      telaRef.current.scrollLeft = telaRef.current.scrollWidth;
+    }
+  }, [valorTela]);
+
   const Tela = (valor, res) => {
     return (
       <output className="tela">
-        <h2 className="telaOper">{valor}</h2>
+        <h2 className="telaOper" ref={telaRef}>
+          {valor}
+        </h2>
         <p className="telaRes">{res}</p>
       </output>
     );
@@ -25,33 +39,37 @@ export default function App() {
   };
 
   // funções
-const addDigitoTela = (d) => {
-  const operadores = ["+", "-", "*", "/"];
-  const ultimoChar = valorTela.slice(-1);
+  const addDigitoTela = (d) => {
+      if ("vibrate" in navigator) {
+      navigator.vibrate(100);
+    }
 
-  if (operadores.includes(d)) {
-    if (operadores.includes(ultimoChar)) {
-      setValorTela(valorTela.slice(0, -1) + d);
+    const ultimoChar = valorTela.slice(-1);
+
+    if (operadores.includes(d)) {
+      if (valorTela === "") return;
+      if (operadores.includes(ultimoChar)) {
+        setValorTela(valorTela.slice(0, -1) + d);
+        return;
+      }
+    }
+
+    if (d === "." && valorTela.endsWith(".")) return;
+
+    if (operadores.includes(d) && operado) {
+      setOperado(false);
+      setValorTela(resultado + d);
       return;
     }
-  }
 
-  if (d === "." && valorTela.endsWith(".")) return; 
+    if (operado) {
+      setValorTela(d);
+      setOperado(false);
+      return;
+    }
 
-  if (operadores.includes(d) && operado) {
-    setOperado(false);
-    setValorTela(resultado + d);
-    return;
-  }
-
-  if (operado) {
-    setValorTela(d);
-    setOperado(false);
-    return;
-  }
-
-  setValorTela(valorTela + d);
-};
+    setValorTela(valorTela + d);
+  };
 
   const limparMemoria = () => {
     setOperado(false);
@@ -62,6 +80,10 @@ const addDigitoTela = (d) => {
   };
 
   const Operacao = (oper) => {
+      if ("vibrate" in navigator) {
+      navigator.vibrate(100);
+    }
+    
     if (oper === "bs") {
       let vtela = valorTela;
       vtela = vtela.substring(0, vtela.length - 1);
@@ -69,10 +91,23 @@ const addDigitoTela = (d) => {
       setOperado(false);
       return;
     }
+
+    let expressao = valorTela.trim();
+
+    // Remove último caractere se for operador
+    if (operadores.includes(expressao.slice(-1))) {
+      expressao = expressao.slice(0, -1);
+    }
+
     try {
-      const r = eval(valorTela) || 0; // Realiza o calculo
+      const r = eval(expressao) || 0;
+
+      // Deixa o resultado em  notação científica 
+      const resultadoFormatado =
+        Math.abs(r) >= 1e10 ? r.toExponential(6) : r;
+
       setAcumador(r);
-      setResultado(r);
+      setResultado(resultadoFormatado);
       setOperado(true);
     } catch {
       setResultado("ERROR");
@@ -103,7 +138,11 @@ const addDigitoTela = (d) => {
           {btn("+", () => addDigitoTela("+"), "btnOper")}
           {btn("0", () => addDigitoTela("0"))}
           {btn(",", () => addDigitoTela("."))}
-          {btn("<", () => Operacao("bs"), "btnOper")}
+          {btn(
+            <FontAwesomeIcon icon={faDeleteLeft} />,
+            () => Operacao("bs"),
+            "btnOper"
+          )}
           {btn("=", () => Operacao("="), "btnResult")}
         </div>
       </div>

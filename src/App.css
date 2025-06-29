@@ -18,7 +18,6 @@ h3 {
 
 .container {
   background-color: #1d1d1d;
-
   margin: 1em auto;
   display: flex;
   justify-content: flex-start;
@@ -34,6 +33,8 @@ h3 {
 
 .botoes {
   display: grid;
+  align-items: center;
+  justify-items: center;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 5px;
   width: 100%;
@@ -43,8 +44,11 @@ h3 {
   display: flex;
   padding-left: 20px;
   padding-right: 20px;
+
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
+  text-align: right;
+
   background-color: #181818;
   flex-direction: column;
   width: 100%;
@@ -57,14 +61,22 @@ h3 {
   font-weight: normal;
   font-size: 25px;
   color: #fff;
-  opacity: .7;
-  height: 20px;
+  opacity: 0.6;
+
+  width: 100%;
+  height: 30px;
+  overflow-x: auto;
+  white-space: nowrap;
+  text-align: right;
 }
+
 
 .telaRes {
   width: 100%;
-  font-size: 50px;
+
+  font-size: 40px;
   text-wrap: wrap;
+  overflow-x: auto;
   text-overflow: ellipsis;
   overflow: hidden;
   color: #fff;
@@ -74,7 +86,7 @@ h3 {
   border: none;
   color: #ffffff;
   background-color: #2d2d2d;
-  box-shadow: inset -5px -5px 10px #00000013,inset 5px 5px 10px #e5e5e505;
+  box-shadow: inset -5px -5px 10px #00000013, inset 5px 5px 10px #e5e5e505;
 
 
   width: 100%;
@@ -86,7 +98,7 @@ h3 {
 }
 
 .btn:active {
-  box-shadow: inset 5px 5px 10px #00000065,inset -5px -5px 10px #e5e5e510;
+  box-shadow: inset 5px 5px 10px #00000065, inset -5px -5px 10px #e5e5e510;
 }
 
 .btnOper {
@@ -97,4 +109,64 @@ h3 {
 
 .btnResult {
   background-color: #ff5100;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    margin: 0;
+    padding: 0;
+
+    justify-content: space-between;
+
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+
+    background-image:linear-gradient(90deg,#121212,#000000ab);
+  }
+  
+  h3 {
+    padding: 10px;
+    font-size: 20px;
+  }
+  
+  .tela {
+    margin: 0;
+    border-radius: 0;
+    height: 100%;
+    box-shadow: none;
+    background-color: transparent;
+  }
+  
+  .telaRes{
+    font-size: 50px;
+  }
+  
+  .botoes {
+    border-radius: 30px 30px 0 0;
+    position: relative;
+    bottom: 0;
+    gap: 0;
+    border-top: 3px solid #ff5100;
+    background-color: #2e2e2e67;
+    padding: 1em;
+  }
+  .btn {
+    box-shadow: none;
+    background-color: transparent;
+    border-radius: 0;
+    font-size: 1.7em;
+    border-radius: 15px;
+  }
+  .btnResult {
+    align-content: center;
+    align-items: center;
+    width: 75px;
+    background-color: #ff5100;
+    border-radius: 50%;
+}
+}
+
+.telaOper::-webkit-scrollbar {
+  display: none;
 }
