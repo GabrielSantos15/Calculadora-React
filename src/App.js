@@ -72,6 +72,9 @@ export default function App() {
   };
 
   const limparMemoria = () => {
+    if ("vibrate" in navigator) {
+      navigator.vibrate(100);
+    }
     setOperado(false);
     setValorTela("");
     setResultado(0);
