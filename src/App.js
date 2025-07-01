@@ -8,7 +8,6 @@ const operadores = ["+", "-", "*", "/"];
 export default function App() {
   const [valorTela, setValorTela] = useState("");
   const [resultado, setResultado] = useState(0);
-  const [acumulador, setAcumador] = useState(0);
   const [operado, setOperado] = useState(false);
 
   const telaRef = useRef(null);
@@ -78,7 +77,6 @@ export default function App() {
     setOperado(false);
     setValorTela("");
     setResultado(0);
-    setAcumador(0);
     return;
   };
 
@@ -103,13 +101,13 @@ export default function App() {
     }
 
     try {
+      // eslint-disable-next-line no-eval
       const r = eval(expressao) || 0;
 
       // Deixa o resultado em  notação científica 
       const resultadoFormatado =
         Math.abs(r) >= 1e10 ? r.toExponential(6) : r;
 
-      setAcumador(r);
       setResultado(resultadoFormatado);
       setOperado(true);
     } catch {
